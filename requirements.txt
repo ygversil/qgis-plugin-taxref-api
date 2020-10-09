@@ -1,0 +1,6 @@
+bump2version
+flake8
+pb_tool
+pytest
+pytest-cov
+sphinx
