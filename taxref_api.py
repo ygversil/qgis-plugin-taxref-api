@@ -35,6 +35,7 @@ import os
 import sys
 import inspect
 
+from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from qgis.core import QgsApplication
 from .taxref_api_provider import TaxrefApiProvider
 
@@ -53,6 +54,18 @@ class TaxrefApiPlugin(object):
         """Init Processing provider for QGIS >= 3.8."""
         self.provider = TaxrefApiProvider()
         QgsApplication.processingRegistry().addProvider(self.provider)
+        # initialize locale
+        locale = QSettings().value('locale/userLocale')[0:2]
+        locale_path = os.path.join(
+            os.path.dirname(__file__),
+            'i18n',
+            '{}.qm'.format(locale)
+        )
+        if os.path.exists(locale_path):
+            self.translator = QTranslator()
+            self.translator.load(locale_path)
+            if qVersion() > '4.3.3':
+                QCoreApplication.installTranslator(self.translator)
 
     def initGui(self):
         self.initProcessing()
