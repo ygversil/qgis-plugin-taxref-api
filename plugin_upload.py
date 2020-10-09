@@ -5,6 +5,7 @@
         git sha              : $TemplateVCSFormat
 """
 
+from future import standard_library
 import sys
 import getpass
 import xmlrpc.client
