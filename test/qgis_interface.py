@@ -75,7 +75,7 @@ class QgisInterface(QObject):
         for layer in layers:
             final_layers.append(layer)
 
-        self.canvas.setLayerSet(final_layers)
+        self.canvas.setLayers(final_layers)
         #LOGGER.debug('Layer Count After: %s' % len(self.canvas.layers()))
 
     @pyqtSlot()
