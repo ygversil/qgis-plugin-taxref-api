@@ -11,12 +11,12 @@
 <context>
     <name>TaxrefApiAlgorithm</name>
     <message>
-        <location filename="../taxref_api_algorithm.py" line="70"/>
+        <location filename="../taxref_api_algorithm.py" line="71"/>
         <source>Input layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../taxref_api_algorithm.py" line="81"/>
+        <location filename="../taxref_api_algorithm.py" line="82"/>
         <source>Output layer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -24,7 +24,7 @@
 <context>
     <name>TaxrefApiProvider</name>
     <message>
-        <location filename="../taxref_api_provider.py" line="75"/>
+        <location filename="../taxref_api_provider.py" line="76"/>
         <source>TAXREF</source>
         <translation type="unfinished"></translation>
     </message>
