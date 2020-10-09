@@ -232,14 +232,12 @@ pylint:
 	@echo "----------------------"
 
 
-# Run pep8 style checking
-#http://pypi.python.org/pypi/pep8
-pep8:
-	@echo
-	@echo "-----------"
-	@echo "PEP8 issues"
-	@echo "-----------"
-	@pep8 --repeat --ignore=E203,E121,E122,E123,E124,E125,E126,E127,E128 --exclude $(PEP8EXCLUDE) . || true
-	@echo "-----------"
-	@echo "Ignored in PEP8 check:"
-	@echo $(PEP8EXCLUDE)
+# Run flake8 style checking
+#http://pypi.python.org/pypi/flake8
+flake8:
+	@echo "-------------"
+	@echo "FLAKE8 issues"
+	@echo "-------------"
+	@flake8 --exclude $(PEP8EXCLUDE) . || true
+	@echo "-------------"
+	@echo "Ignored in FLAKE8 check:"
