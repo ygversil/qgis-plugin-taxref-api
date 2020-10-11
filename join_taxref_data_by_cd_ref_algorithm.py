@@ -46,6 +46,7 @@ from qgis.core import (
     QgsFeatureSink,
     QgsField,
     QgsProcessing,
+    QgsProcessingParameterBoolean,
     QgsProcessingParameterEnum,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterFeatureSink,
@@ -73,7 +74,7 @@ _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_mondiale_code'
 _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_mondiale_libelle'
 
 
-def _added_attributes(cd_ref, region_list, feedback):
+def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     attributes = dict()
     if not cd_ref:
         return attributes
@@ -97,6 +98,16 @@ def _added_attributes(cd_ref, region_list, feedback):
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             region_dict['name']
         region_mnhn_id = _location_id(region_dict, 'region')
+        _add_local_red_list_status(
+            attributes, status_list, region_mnhn_id,
+            _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
+    for old_region_dict in old_region_list:
+        reg_code = old_region_dict['insee_code']
+        attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
+            old_region_dict['name']
+        region_mnhn_id = _location_id(old_region_dict, 'old_region')
         _add_local_red_list_status(
             attributes, status_list, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -154,6 +165,8 @@ def _location_id(location_dict, location_type):
                     _OLD_REGION_ID_MNHN_PREFIX),
             code=code,
         )
+    elif location_type == 'old_region':
+        return template.format(prefix=_OLD_REGION_ID_MNHN_PREFIX, code=code)
 
 
 class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
@@ -161,6 +174,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
     INPUT = 'INPUT'
     CD_REF_FIELD = 'CD_REF_FIELD'
     REGION = 'REGION'
+    INCLUDE_OLD_REGIONS = 'INCLUDE_OLD_REGIONS'
     OUTPUT = 'OUTPUT'
 
     def name(self):
@@ -205,6 +219,14 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             )
         )
         self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.INCLUDE_OLD_REGIONS,
+                self.tr('Include old regions status'),
+                region_list,
+                False,
+            )
+        )
+        self.addParameter(
             QgsProcessingParameterFeatureSink(
                 self.OUTPUT,
                 self.tr('Output layer')
@@ -215,6 +237,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         source = self.parameterAsSource(parameters, self.INPUT, context)
         cd_ref_field = self.parameterAsString(parameters, self.CD_REF_FIELD, context)
         region_indices = self.parameterAsEnums(parameters, self.REGION, context)
+        include_old_regions = self.parameterAsBoolean(parameters, self.INCLUDE_OLD_REGIONS, context)
         with (Path(__file__).parent / 'yml_data' / 'regions.yml').open(encoding='utf-8') as f:
             region_list = yaml.load(f.read(), Loader=yaml.SafeLoader)
         region_list = [region_list[i] for i in region_indices]
@@ -242,6 +265,29 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             ):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
+        if not include_old_regions:
+            old_region_list = []
+        else:
+            with (Path(__file__).parent / 'yml_data'
+                  / 'old_regions.yml').open(encoding='utf-8') as f:
+                old_region_list = yaml.load(f.read(), Loader=yaml.SafeLoader)
+        parent_codes = set(region_dict['insee_code'] for region_dict in region_list)
+        old_region_list = list(
+            filter(lambda old_region_dict: old_region_dict['parent_code'] in parent_codes,
+                   old_region_list)
+        )
+        for old_region_dict in old_region_list:
+            reg_code = old_region_dict['insee_code']
+            for field_name, field_type in (
+                (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
         (sink, dest_id) = self.parameterAsSink(parameters, self.OUTPUT,
                                                context, fields, source.wkbType(),
                                                source.sourceCrs())
@@ -251,7 +297,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             if feedback.isCanceled():
                 break
             cd_ref = in_feature.attribute(cd_ref_field)
-            added_attributes_dict = _added_attributes(cd_ref, region_list, feedback)
+            added_attributes_dict = _added_attributes(cd_ref, region_list, old_region_list,
+                                                      feedback)
             out_feature = QgsFeature()
             out_feature.setGeometry(in_feature.geometry())
             out_attributes = in_feature.attributes()
