@@ -31,17 +31,137 @@ __copyright__ = '(C) 2020 by Yann Voté'
 
 __revision__ = '$Format:%H$'
 
+
+from pathlib import Path
+from urllib.parse import urljoin
+import json
+import yaml
+
 from processing.algs.qgis.QgisAlgorithm import QgisAlgorithm
-from qgis.core import (QgsProcessing,
-                       QgsFeatureSink,
-                       QgsProcessingParameterFeatureSource,
-                       QgsProcessingParameterFeatureSink)
+from qgis.PyQt.QtCore import QUrl, QVariant
+from qgis.PyQt.QtNetwork import QNetworkRequest
+from qgis.core import (
+    QgsBlockingNetworkRequest,
+    QgsFeature,
+    QgsFeatureSink,
+    QgsField,
+    QgsProcessing,
+    QgsProcessingParameterEnum,
+    QgsProcessingParameterFeatureSource,
+    QgsProcessingParameterFeatureSink,
+    QgsProcessingParameterField,
+)
+
+
+_DEPARTMENT_ID_MNHN_PREFIX = 'INSEEND'
+_EUROPEAN_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRE'
+_EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_europeenne_code'
+_EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_europeenne_libelle'
+_LOCAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRR'
+_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_code'
+_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_region'
+_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_libelle'
+_NATIONAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRN'
+_NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_nationale_code'
+_NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_nationale_libelle'
+_OLD_REGION_ID_MNHN_PREFIX = 'INSEER'
+_REGION_ID_MNHN_PREFIX = 'INSEENR'
+_STATUS_PATH = 'taxa/{cd_ref}/status/lines'
+_TAXREF_API_BASE_URL = 'https://taxref.mnhn.fr/api/'
+_WORLD_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRM'
+_WORLD_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_mondiale_code'
+_WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_mondiale_libelle'
+
+
+def _added_attributes(cd_ref, region_list, feedback):
+    attributes = dict()
+    if not cd_ref:
+        return attributes
+    feedback.pushDebugInfo('Fetching status data for CD_REF {}...'.format(cd_ref))
+    res = _get_json_results(_STATUS_PATH.format(cd_ref=cd_ref), feedback)
+    if not res:
+        feedback.reportError('Failed to fetch data for CD_REF {}. Ignoring...'.format(cd_ref))
+        return attributes
+    status_list = res['status']
+    _add_supra_national_red_list_status(attributes, status_list, _WORLD_RED_LIST_STATUS_TYPE_URI,
+                                        _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME,
+                                        _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_red_list_status(attributes, status_list, _EUROPEAN_RED_LIST_STATUS_TYPE_URI,
+                                        _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME,
+                                        _EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_red_list_status(attributes, status_list, _NATIONAL_RED_LIST_STATUS_TYPE_URI,
+                                        _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME,
+                                        _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    for region_dict in region_list:
+        reg_code = region_dict['insee_code']
+        attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
+            region_dict['name']
+        region_mnhn_id = _location_id(region_dict, 'region')
+        _add_local_red_list_status(
+            attributes, status_list, region_mnhn_id,
+            _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
+    feedback.pushDebugInfo('Added attributes: {}'.format(str(attributes)))
+    return attributes
+
+
+def _add_local_red_list_status(attributes, status_list, location_id, code_field_name,
+                               title_field_name):
+    code = None
+    title = None
+    for status_dict in status_list:
+        if (status_dict['_links']['statusType']['href'] == _LOCAL_RED_LIST_STATUS_TYPE_URI
+                and status_dict['locationId'] == location_id):
+            code = status_dict['statusCode']
+            title = status_dict['statusName']
+            break
+    attributes[code_field_name] = code
+    attributes[title_field_name] = title
+
+
+def _add_supra_national_red_list_status(attributes, status_list, status_type, code_field_name,
+                                        title_field_name):
+    code = None
+    title = None
+    for status_dict in status_list:
+        if status_dict['_links']['statusType']['href'] == status_type:
+            code = status_dict['statusCode']
+            title = status_dict['statusName']
+            break
+    attributes[code_field_name] = code
+    attributes[title_field_name] = title
+
+
+def _get_json_results(path, feedback):
+    req = QgsBlockingNetworkRequest()
+    req_status = req.get(QNetworkRequest(QUrl(urljoin(_TAXREF_API_BASE_URL, path))))
+    if req_status != QgsBlockingNetworkRequest.NoError:
+        for error_name in ('NetworkError', 'TimeoutError', 'ServerExceptionError'):
+            if req_status == getattr(QgsBlockingNetworkRequest, error_name):
+                feedback.reportError('{}: {}'.format(error_name, req.errorMessage()))
+                break
+        return None
+    return json.loads(bytes(req.reply().content()))['_embedded']
+
+
+def _location_id(location_dict, location_type):
+    template = '{prefix}{code}'
+    code = location_dict['insee_code']
+    if location_type == 'region':
+        return template.format(
+            prefix=(_REGION_ID_MNHN_PREFIX if not location_dict['is_same_than_old_region'] else
+                    _OLD_REGION_ID_MNHN_PREFIX),
+            code=code,
+        )
 
 
 class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
 
-    OUTPUT = 'OUTPUT'
     INPUT = 'INPUT'
+    CD_REF_FIELD = 'CD_REF_FIELD'
+    REGION = 'REGION'
+    OUTPUT = 'OUTPUT'
 
     def name(self):
         return 'jointaxrefdatabycdref'
@@ -56,11 +176,32 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         return self.tr('TAXREF')
 
     def initAlgorithm(self, config):
+        with (Path(__file__).parent / 'yml_data' / 'regions.yml').open(encoding='utf-8') as f:
+            region_list = yaml.load(f.read(), Loader=yaml.SafeLoader)
+        region_list = [region_dict['name'] for region_dict in region_list]
         self.addParameter(
             QgsProcessingParameterFeatureSource(
                 self.INPUT,
                 self.tr('Input layer'),
                 [QgsProcessing.TypeVectorAnyGeometry]
+            )
+        )
+        self.addParameter(
+            QgsProcessingParameterField(
+                self.CD_REF_FIELD,
+                self.tr('CD_REF field'),
+                None,
+                self.INPUT,
+                QgsProcessingParameterField.Numeric,
+            )
+        )
+        self.addParameter(
+            QgsProcessingParameterEnum(
+                self.REGION,
+                self.tr('Regions for which to download local status'),
+                region_list,
+                allowMultiple=True,
+                defaultValue=None,
             )
         )
         self.addParameter(
@@ -72,14 +213,51 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
 
     def processAlgorithm(self, parameters, context, feedback):
         source = self.parameterAsSource(parameters, self.INPUT, context)
+        cd_ref_field = self.parameterAsString(parameters, self.CD_REF_FIELD, context)
+        region_indices = self.parameterAsEnums(parameters, self.REGION, context)
+        with (Path(__file__).parent / 'yml_data' / 'regions.yml').open(encoding='utf-8') as f:
+            region_list = yaml.load(f.read(), Loader=yaml.SafeLoader)
+        region_list = [region_list[i] for i in region_indices]
+        fields = source.fields()
+        added_fields = []
+        for field_name, field_type in (
+            (_WORLD_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
+        ):
+            fields.append(QgsField(field_name, field_type))
+            added_fields.append(field_name)
+        for region_dict in region_list:
+            reg_code = region_dict['insee_code']
+            for field_name, field_type in (
+                (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
         (sink, dest_id) = self.parameterAsSink(parameters, self.OUTPUT,
-                                               context, source.fields(), source.wkbType(),
+                                               context, fields, source.wkbType(),
                                                source.sourceCrs())
         total = 100.0 / source.featureCount() if source.featureCount() else 0
         features = source.getFeatures()
-        for current, feature in enumerate(features):
+        for i, in_feature in enumerate(features):
             if feedback.isCanceled():
                 break
-            sink.addFeature(feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int(current * total))
+            cd_ref = in_feature.attribute(cd_ref_field)
+            added_attributes_dict = _added_attributes(cd_ref, region_list, feedback)
+            out_feature = QgsFeature()
+            out_feature.setGeometry(in_feature.geometry())
+            out_attributes = in_feature.attributes()
+            for field_name in added_fields:
+                out_attributes.append(added_attributes_dict.get(field_name))
+            out_feature.setAttributes(out_attributes)
+            sink.addFeature(out_feature, QgsFeatureSink.FastInsert)
+            feedback.setProgress(int(i * total))
         return {self.OUTPUT: dest_id}
