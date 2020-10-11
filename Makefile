@@ -53,7 +53,7 @@ UI_FILES =
 
 EXTRAS = metadata.txt
 
-EXTRA_DIRS =
+EXTRA_DIRS = yml_data
 
 COMPILED_RESOURCE_FILES =
 

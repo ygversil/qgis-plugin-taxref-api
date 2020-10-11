@@ -1,0 +1,55 @@
+---
+- insee_code: 01
+  name: Gaudeloupe
+  is_same_than_old_region: true
+- insee_code: 02
+  name: Martinique
+  is_same_than_old_region: true
+- insee_code: 03
+  is_same_than_old_region: true
+  name: Guyane
+- insee_code: 04
+  name: La Réunion
+  is_same_than_old_region: true
+- insee_code: 06
+  name: Mayotte
+  is_same_than_old_region: true
+- insee_code: 11
+  name: Île-de-France
+  is_same_than_old_region: true
+- insee_code: 24
+  name: Centre-Val de Loire
+  is_same_than_old_region: true
+- insee_code: 27
+  name: Bourgogne-Franche-Comté
+  is_same_than_old_region: false
+- insee_code: 28
+  name: Normandie
+  is_same_than_old_region: false
+- insee_code: 32
+  name: Hauts-de-France
+  is_same_than_old_region: false
+- insee_code: 44
+  name: Grand Est
+  is_same_than_old_region: false
+- insee_code: 52
+  name: Pays de la Loire
+  is_same_than_old_region: true
+- insee_code: 53
+  name: Bretagne
+  is_same_than_old_region: true
+- insee_code: 75
+  name: Nouvelle-Aquitaine
+  is_same_than_old_region: false
+- insee_code: 76
+  name: Occitanie
+  is_same_than_old_region: false
+- insee_code: 84
+  name: Auvergne-Rhône-Alpes
+  is_same_than_old_region: false
+- insee_code: 93
+  name: Provence-Alpes-Côte d'Azur
+  is_same_than_old_region: true
+- insee_code: 94
+  name: Corse
+  is_same_than_old_region: true
