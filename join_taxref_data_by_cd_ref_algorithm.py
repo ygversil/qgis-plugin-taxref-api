@@ -72,6 +72,10 @@ _TAXREF_API_BASE_URL = 'https://taxref.mnhn.fr/api/'
 _WORLD_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRM'
 _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_mondiale_code'
 _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_mondiale_libelle'
+_REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/ZDET'
+_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_code'
+_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME = 'det_znieff_regionale_{reg_code}_region'
+_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME = 'deet_znieff_regionale_{reg_code}_libelle'
 
 
 def _added_attributes(cd_ref, region_list, old_region_list, feedback):
@@ -284,6 +288,12 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
