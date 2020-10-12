@@ -205,7 +205,13 @@ def _get_json_results(path, feedback):
                 feedback.reportError('{}: {}'.format(error_name, req.errorMessage()))
                 break
         return None
-    return json.loads(bytes(req.reply().content()))['_embedded']
+    content = bytes(req.reply().content())
+    if not content:
+        feedback.reportError('Error while downloading data from {}.'.format(
+            urljoin(_TAXREF_API_BASE_URL, path)
+        ))
+        return None
+    return json.loads(content)['_embedded']
 
 
 def _location_id(location_dict, location_type):
