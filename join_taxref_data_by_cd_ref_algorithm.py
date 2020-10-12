@@ -54,10 +54,25 @@ from qgis.core import (
 )
 
 
+_BARCELONA_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/BARC'
+_BARCELONA_CONVENTION_STATUS_CODE_FIELD_NAME = 'convention_barcelone_code'
+_BARCELONA_CONVENTION_STATUS_TITLE_FIELD_NAME = 'convention_barcelone_libelle'
+_BERN_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/BERN'
+_BERN_CONVENTION_STATUS_CODE_FIELD_NAME = 'convention_bern_code'
+_BERN_CONVENTION_STATUS_TITLE_FIELD_NAME = 'convention_bern_libelle'
+_BIRDS_DIRECTIVE_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/DO'
+_BIRDS_DIRECTIVE_STATUS_CODE_FIELD_NAME = 'directive_oiseaux_code'
+_BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME = 'directive_oiseaux_libelle'
+_BONN_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/BONN'
+_BONN_CONVENTION_STATUS_CODE_FIELD_NAME = 'convention_bonn_code'
+_BONN_CONVENTION_STATUS_TITLE_FIELD_NAME = 'convention_bonn_libelle'
 _DEPARTMENT_ID_MNHN_PREFIX = 'INSEEND'
 _EUROPEAN_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRE'
 _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_europeenne_code'
 _EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_europeenne_libelle'
+_HABITATS_DIRECTIVE_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/DH'
+_HABITATS_DIRECTIVE_STATUS_CODE_FIELD_NAME = 'directive_habitats_code'
+_HABITATS_DIRECTIVE_STATUS_TITLE_FIELD_NAME = 'directive_habitats_libelle'
 _LOCAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRR'
 _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_code'
 _LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_region'
@@ -66,6 +81,9 @@ _NATIONAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LR
 _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_nationale_code'
 _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_nationale_libelle'
 _OLD_REGION_ID_MNHN_PREFIX = 'INSEER'
+_OSPAR_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/OSPAR'
+_OSPAR_CONVENTION_STATUS_CODE_FIELD_NAME = 'convention_ospar_code'
+_OSPAR_CONVENTION_STATUS_TITLE_FIELD_NAME = 'convention_ospar_libelle'
 _REGION_ID_MNHN_PREFIX = 'INSEENR'
 _STATUS_PATH = 'taxa/{cd_ref}/status/lines'
 _TAXREF_API_BASE_URL = 'https://taxref.mnhn.fr/api/'
@@ -88,6 +106,24 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
         feedback.reportError('Failed to fetch data for CD_REF {}. Ignoring...'.format(cd_ref))
         return attributes
     status_list = res['status']
+    _add_supra_national_status(attributes, status_list, _BARCELONA_CONVENTION_STATUS_TYPE_URI,
+                               _BARCELONA_CONVENTION_STATUS_CODE_FIELD_NAME,
+                               _BARCELONA_CONVENTION_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _BERN_CONVENTION_STATUS_TYPE_URI,
+                               _BERN_CONVENTION_STATUS_CODE_FIELD_NAME,
+                               _BERN_CONVENTION_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _BONN_CONVENTION_STATUS_TYPE_URI,
+                               _BONN_CONVENTION_STATUS_CODE_FIELD_NAME,
+                               _BONN_CONVENTION_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _OSPAR_CONVENTION_STATUS_TYPE_URI,
+                               _OSPAR_CONVENTION_STATUS_CODE_FIELD_NAME,
+                               _OSPAR_CONVENTION_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _HABITATS_DIRECTIVE_STATUS_TYPE_URI,
+                               _HABITATS_DIRECTIVE_STATUS_CODE_FIELD_NAME,
+                               _HABITATS_DIRECTIVE_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _BIRDS_DIRECTIVE_STATUS_TYPE_URI,
+                               _BIRDS_DIRECTIVE_STATUS_CODE_FIELD_NAME,
+                               _BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME)
     _add_supra_national_status(attributes, status_list, _WORLD_RED_LIST_STATUS_TYPE_URI,
                                _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME,
                                _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME)
@@ -262,6 +298,18 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         fields = source.fields()
         added_fields = []
         for field_name, field_type in (
+            (_BARCELONA_CONVENTION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_BARCELONA_CONVENTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_BERN_CONVENTION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_BERN_CONVENTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_BONN_CONVENTION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_BONN_CONVENTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_OSPAR_CONVENTION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_OSPAR_CONVENTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_HABITATS_DIRECTIVE_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_HABITATS_DIRECTIVE_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_BIRDS_DIRECTIVE_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_WORLD_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
             (_WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
