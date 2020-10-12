@@ -77,6 +77,9 @@ _LOCAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRR'
 _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_code'
 _LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_region'
 _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_libelle'
+_NATIONAL_PROTECTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PN'
+_NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME = 'protection_nationale_code'
+_NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME = 'protection_nationale_libelle'
 _NATIONAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRN'
 _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_nationale_code'
 _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_nationale_libelle'
@@ -90,6 +93,10 @@ _TAXREF_API_BASE_URL = 'https://taxref.mnhn.fr/api/'
 _WORLD_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRM'
 _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_mondiale_code'
 _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_mondiale_libelle'
+_REGIONAL_PROTECTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PR'
+_REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME = 'protection_regionale_{reg_code}_code'
+_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME = 'protection_regionale_{reg_code}_region'
+_REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME = 'protection_regionale_{reg_code}_libelle'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/ZDET'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_code'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME = 'det_znieff_regionale_{reg_code}_region'
@@ -124,6 +131,9 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     _add_supra_national_status(attributes, status_list, _BIRDS_DIRECTIVE_STATUS_TYPE_URI,
                                _BIRDS_DIRECTIVE_STATUS_CODE_FIELD_NAME,
                                _BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _NATIONAL_PROTECTION_STATUS_TYPE_URI,
+                               _NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME,
+                               _NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME)
     _add_supra_national_status(attributes, status_list, _WORLD_RED_LIST_STATUS_TYPE_URI,
                                _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME,
                                _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME)
@@ -136,6 +146,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
         region_mnhn_id = _location_id(region_dict, 'region')
+        attributes[_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
+            region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_PROTECTION_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             region_dict['name']
         _add_local_status(
@@ -153,6 +170,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     for old_region_dict in old_region_list:
         reg_code = old_region_dict['insee_code']
         region_mnhn_id = _location_id(old_region_dict, 'old_region')
+        attributes[_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
+            old_region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_PROTECTION_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             old_region_dict['name']
         _add_local_status(
@@ -314,6 +338,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             (_HABITATS_DIRECTIVE_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_BIRDS_DIRECTIVE_STATUS_CODE_FIELD_NAME, QVariant.String),
             (_BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_WORLD_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
             (_WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
@@ -326,6 +352,12 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for region_dict in region_list:
             reg_code = region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -355,6 +387,12 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for old_region_dict in old_region_list:
             reg_code = old_region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
