@@ -269,7 +269,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.String),
+                 QVariant.Bool),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
             ):
@@ -298,7 +298,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.String),
+                 QVariant.Bool),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
             ):
