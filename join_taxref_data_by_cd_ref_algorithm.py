@@ -88,15 +88,15 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
         feedback.reportError('Failed to fetch data for CD_REF {}. Ignoring...'.format(cd_ref))
         return attributes
     status_list = res['status']
-    _add_supra_national_red_list_status(attributes, status_list, _WORLD_RED_LIST_STATUS_TYPE_URI,
-                                        _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME,
-                                        _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_red_list_status(attributes, status_list, _EUROPEAN_RED_LIST_STATUS_TYPE_URI,
-                                        _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME,
-                                        _EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_red_list_status(attributes, status_list, _NATIONAL_RED_LIST_STATUS_TYPE_URI,
-                                        _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME,
-                                        _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _WORLD_RED_LIST_STATUS_TYPE_URI,
+                               _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME,
+                               _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _EUROPEAN_RED_LIST_STATUS_TYPE_URI,
+                               _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME,
+                               _EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _NATIONAL_RED_LIST_STATUS_TYPE_URI,
+                               _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME,
+                               _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME)
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
         region_mnhn_id = _location_id(region_dict, 'region')
@@ -149,8 +149,8 @@ def _add_local_status(attributes, status_list, status_type, location_id, code_fi
     attributes[title_field_name] = title
 
 
-def _add_supra_national_red_list_status(attributes, status_list, status_type, code_field_name,
-                                        title_field_name):
+def _add_supra_national_status(attributes, status_list, status_type, code_field_name,
+                               title_field_name):
     code = None
     title = None
     for status_dict in status_list:
