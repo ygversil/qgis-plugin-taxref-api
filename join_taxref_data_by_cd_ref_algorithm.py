@@ -75,7 +75,7 @@ _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_mondiale_libelle'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/ZDET'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_code'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME = 'det_znieff_regionale_{reg_code}_region'
-_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME = 'deet_znieff_regionale_{reg_code}_libelle'
+_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_libelle'
 
 
 def _added_attributes(cd_ref, region_list, old_region_list, feedback):
