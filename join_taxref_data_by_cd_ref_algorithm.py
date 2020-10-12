@@ -266,6 +266,12 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
