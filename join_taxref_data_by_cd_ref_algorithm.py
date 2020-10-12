@@ -102,8 +102,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             region_dict['name']
         region_mnhn_id = _location_id(region_dict, 'region')
-        _add_local_red_list_status(
-            attributes, status_list, region_mnhn_id,
+        _add_local_status(
+            attributes, status_list, _LOCAL_RED_LIST_STATUS_TYPE_URI, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
@@ -112,8 +112,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             old_region_dict['name']
         region_mnhn_id = _location_id(old_region_dict, 'old_region')
-        _add_local_red_list_status(
-            attributes, status_list, region_mnhn_id,
+        _add_local_status(
+            attributes, status_list, _LOCAL_RED_LIST_STATUS_TYPE_URI, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
@@ -121,12 +121,12 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     return attributes
 
 
-def _add_local_red_list_status(attributes, status_list, location_id, code_field_name,
-                               title_field_name):
+def _add_local_status(attributes, status_list, status_type, location_id, code_field_name,
+                      title_field_name):
     code = None
     title = None
     for status_dict in status_list:
-        if (status_dict['_links']['statusType']['href'] == _LOCAL_RED_LIST_STATUS_TYPE_URI
+        if (status_dict['_links']['statusType']['href'] == status_type
                 and status_dict['locationId'] == location_id):
             code = status_dict['statusCode']
             title = status_dict['statusName']
