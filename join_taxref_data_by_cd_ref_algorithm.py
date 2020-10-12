@@ -99,9 +99,9 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
                                         _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME)
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
+        region_mnhn_id = _location_id(region_dict, 'region')
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             region_dict['name']
-        region_mnhn_id = _location_id(region_dict, 'region')
         _add_local_status(
             attributes, status_list, _LOCAL_RED_LIST_STATUS_TYPE_URI, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -109,9 +109,9 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
         )
     for old_region_dict in old_region_list:
         reg_code = old_region_dict['insee_code']
+        region_mnhn_id = _location_id(old_region_dict, 'old_region')
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             old_region_dict['name']
-        region_mnhn_id = _location_id(old_region_dict, 'old_region')
         _add_local_status(
             attributes, status_list, _LOCAL_RED_LIST_STATUS_TYPE_URI, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
