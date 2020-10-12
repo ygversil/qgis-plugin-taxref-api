@@ -107,6 +107,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
+            = region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
     for old_region_dict in old_region_list:
         reg_code = old_region_dict['insee_code']
         region_mnhn_id = _location_id(old_region_dict, 'old_region')
@@ -116,6 +123,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _LOCAL_RED_LIST_STATUS_TYPE_URI, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
+        attributes[_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
+            = old_region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
     feedback.pushDebugInfo('Added attributes: {}'.format(str(attributes)))
     return attributes
