@@ -73,9 +73,15 @@ _DEPARTMENT_ID_MNHN_PREFIX = 'INSEEND'
 _EUROPEAN_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRE'
 _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_europeenne_code'
 _EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_europeenne_libelle'
+_FORBIDDEN_INTRODUCTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/REGLII'
+_FORBIDDEN_INTRODUCTION_STATUS_CODE_FIELD_NAME = 'interdiction_introduction_code'
+_FORBIDDEN_INTRODUCTION_STATUS_TITLE_FIELD_NAME = 'interdiction_introduction_libelle'
 _HABITATS_DIRECTIVE_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/DH'
 _HABITATS_DIRECTIVE_STATUS_CODE_FIELD_NAME = 'directive_habitats_code'
 _HABITATS_DIRECTIVE_STATUS_TITLE_FIELD_NAME = 'directive_habitats_libelle'
+_INVASIVE_FIGHT_INTRODUCTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/REGLLUTTE'
+_INVASIVE_FIGHT_INTRODUCTION_STATUS_CODE_FIELD_NAME = 'lutte_especes_invasive_code'
+_INVASIVE_FIGHT_INTRODUCTION_STATUS_TITLE_FIELD_NAME = 'lutte_especes_invasive_libelle'
 _LOCAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRR'
 _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_code'
 _LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_region'
@@ -96,10 +102,16 @@ _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_nationale_libelle'
 _NATIONAL_SCAP_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SCAP%20NAT'
 _NATIONAL_SCAP_STATUS_CODE_FIELD_NAME = 'scap_nationale_code'
 _NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME = 'scap_nationale_libelle'
+_NATIONAL_SENSITIVITY_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SENSNAT'
+_NATIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME = 'sensibilite_nationale_code'
+_NATIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME = 'sensibilite_nationale_libelle'
 _OLD_REGION_ID_MNHN_PREFIX = 'INSEER'
 _OSPAR_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/OSPAR'
 _OSPAR_CONVENTION_STATUS_CODE_FIELD_NAME = 'convention_ospar_code'
 _OSPAR_CONVENTION_STATUS_TITLE_FIELD_NAME = 'convention_ospar_libelle'
+_OTHER_REGULATION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/REGLSO'
+_OTHER_REGULATION_STATUS_CODE_FIELD_NAME = 'autre_reglementation_code'
+_OTHER_REGULATION_STATUS_TITLE_FIELD_NAME = 'autre_reglementation_libelle'
 _REGION_ID_MNHN_PREFIX = 'INSEENR'
 _STATUS_PATH = 'taxa/{cd_ref}/status/lines'
 _TAXREF_API_BASE_URL = 'https://taxref.mnhn.fr/api/'
@@ -114,10 +126,17 @@ _REGIONAL_SCAP_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SCAP%2
 _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME = 'scap_regionale_{reg_code}_code'
 _REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME = 'scap_regionale_{reg_code}_region'
 _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME = 'scap_regionale_{reg_code}_libelle'
+_REGIONAL_SENSITIVITY_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SENSREG'
+_REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME = 'sensibilite_regionale_{reg_code}_code'
+_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME = 'sensibilite_regionale_{reg_code}_region'
+_REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME = 'sensibilite_regionale_{reg_code}_libelle'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/ZDET'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_code'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME = 'det_znieff_regionale_{reg_code}_region'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_libelle'
+_REGULATION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/REGL'
+_REGULATION_STATUS_CODE_FIELD_NAME = 'reglementation_code'
+_REGULATION_STATUS_TITLE_FIELD_NAME = 'reglementation_libelle'
 
 
 def _added_attributes(cd_ref, region_list, old_region_list, feedback):
@@ -163,6 +182,14 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     _add_supra_national_status(attributes, status_list, _NATIONAL_SCAP_STATUS_TYPE_URI,
                                _NATIONAL_SCAP_STATUS_CODE_FIELD_NAME,
                                _NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list,
+                               _REGULATION_STATUS_TYPE_URI,
+                               _REGULATION_STATUS_CODE_FIELD_NAME,
+                               _REGULATION_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list,
+                               _OTHER_REGULATION_STATUS_TYPE_URI,
+                               _OTHER_REGULATION_STATUS_CODE_FIELD_NAME,
+                               _OTHER_REGULATION_STATUS_TITLE_FIELD_NAME)
     _add_supra_national_status(attributes, status_list, _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI,
                                _NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME,
                                _NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME)
@@ -170,6 +197,18 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
                                _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TYPE_URI,
                                _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_CODE_FIELD_NAME,
                                _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list,
+                               _NATIONAL_SENSITIVITY_STATUS_TYPE_URI,
+                               _NATIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME,
+                               _NATIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list,
+                               _FORBIDDEN_INTRODUCTION_STATUS_TYPE_URI,
+                               _FORBIDDEN_INTRODUCTION_STATUS_CODE_FIELD_NAME,
+                               _FORBIDDEN_INTRODUCTION_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list,
+                               _INVASIVE_FIGHT_INTRODUCTION_STATUS_TYPE_URI,
+                               _INVASIVE_FIGHT_INTRODUCTION_STATUS_CODE_FIELD_NAME,
+                               _INVASIVE_FIGHT_INTRODUCTION_STATUS_TITLE_FIELD_NAME)
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
         region_mnhn_id = _location_id(region_dict, 'region')
@@ -201,6 +240,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
+            = region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_SENSITIVITY_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
     for old_region_dict in old_region_list:
         reg_code = old_region_dict['insee_code']
         region_mnhn_id = _location_id(old_region_dict, 'old_region')
@@ -231,6 +277,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _REGIONAL_SCAP_STATUS_TYPE_URI, region_mnhn_id,
             _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
+        attributes[_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
+            = old_region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_SENSITIVITY_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
     feedback.pushDebugInfo('Added attributes: {}'.format(str(attributes)))
     return attributes
@@ -508,12 +561,50 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
         for field_name, field_type in (
+            (_REGULATION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_REGULATION_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_OTHER_REGULATION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_OTHER_REGULATION_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME, QVariant.Bool),
             (_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME, QVariant.Bool),
             (_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_CODE_FIELD_NAME, QVariant.Int),
             (_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME, QVariant.Bool),
+            (_NATIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME, QVariant.String),
+        ):
+            fields.append(QgsField(field_name, field_type))
+            added_fields.append(field_name)
+        for region_dict in region_list:
+            reg_code = region_dict['insee_code']
+            for field_name, field_type in (
+                (_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.Bool),
+                (_REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for old_region_dict in old_region_list:
+            reg_code = old_region_dict['insee_code']
+            for field_name, field_type in (
+                (_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.Bool),
+                (_REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for field_name, field_type in (
+            (_FORBIDDEN_INTRODUCTION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_FORBIDDEN_INTRODUCTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_INVASIVE_FIGHT_INTRODUCTION_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_INVASIVE_FIGHT_INTRODUCTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
         ):
             fields.append(QgsField(field_name, field_type))
             added_fields.append(field_name)
