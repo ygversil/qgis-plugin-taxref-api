@@ -32,7 +32,7 @@ __copyright__ = '(C) 2020 by Yann Voté'
 __revision__ = '$Format:%H$'
 
 from qgis.core import QgsProcessingProvider
-from .taxref_api_algorithm import TaxrefApiAlgorithm
+from .join_taxref_data_by_cd_ref_algorithm import JoinTaxrefDataByCdRefAlgorithm
 
 
 class TaxrefApiProvider(QgsProcessingProvider):
@@ -54,7 +54,7 @@ class TaxrefApiProvider(QgsProcessingProvider):
         """
         Loads all algorithms belonging to this provider.
         """
-        self.addAlgorithm(TaxrefApiAlgorithm())
+        self.addAlgorithm(JoinTaxrefDataByCdRefAlgorithm())
         # add additional algorithms here
         # self.addAlgorithm(MyOtherAlgorithm())
 
