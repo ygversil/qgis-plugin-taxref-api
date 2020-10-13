@@ -149,66 +149,100 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
         feedback.reportError('Failed to fetch data for CD_REF {}. Ignoring...'.format(cd_ref))
         return attributes
     status_list = res['status']
-    _add_supra_national_status(attributes, status_list, _BARCELONA_CONVENTION_STATUS_TYPE_URI,
-                               _BARCELONA_CONVENTION_STATUS_CODE_FIELD_NAME,
-                               _BARCELONA_CONVENTION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _BERN_CONVENTION_STATUS_TYPE_URI,
-                               _BERN_CONVENTION_STATUS_CODE_FIELD_NAME,
-                               _BERN_CONVENTION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _BONN_CONVENTION_STATUS_TYPE_URI,
-                               _BONN_CONVENTION_STATUS_CODE_FIELD_NAME,
-                               _BONN_CONVENTION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _OSPAR_CONVENTION_STATUS_TYPE_URI,
-                               _OSPAR_CONVENTION_STATUS_CODE_FIELD_NAME,
-                               _OSPAR_CONVENTION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _HABITATS_DIRECTIVE_STATUS_TYPE_URI,
-                               _HABITATS_DIRECTIVE_STATUS_CODE_FIELD_NAME,
-                               _HABITATS_DIRECTIVE_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _BIRDS_DIRECTIVE_STATUS_TYPE_URI,
-                               _BIRDS_DIRECTIVE_STATUS_CODE_FIELD_NAME,
-                               _BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _NATIONAL_PROTECTION_STATUS_TYPE_URI,
-                               _NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME,
-                               _NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _WORLD_RED_LIST_STATUS_TYPE_URI,
-                               _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME,
-                               _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _EUROPEAN_RED_LIST_STATUS_TYPE_URI,
-                               _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME,
-                               _EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _NATIONAL_RED_LIST_STATUS_TYPE_URI,
-                               _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME,
-                               _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _NATIONAL_SCAP_STATUS_TYPE_URI,
-                               _NATIONAL_SCAP_STATUS_CODE_FIELD_NAME,
-                               _NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list,
-                               _REGULATION_STATUS_TYPE_URI,
-                               _REGULATION_STATUS_CODE_FIELD_NAME,
-                               _REGULATION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list,
-                               _OTHER_REGULATION_STATUS_TYPE_URI,
-                               _OTHER_REGULATION_STATUS_CODE_FIELD_NAME,
-                               _OTHER_REGULATION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list, _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI,
-                               _NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME,
-                               _NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list,
-                               _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TYPE_URI,
-                               _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_CODE_FIELD_NAME,
-                               _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list,
-                               _NATIONAL_SENSITIVITY_STATUS_TYPE_URI,
-                               _NATIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME,
-                               _NATIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list,
-                               _FORBIDDEN_INTRODUCTION_STATUS_TYPE_URI,
-                               _FORBIDDEN_INTRODUCTION_STATUS_CODE_FIELD_NAME,
-                               _FORBIDDEN_INTRODUCTION_STATUS_TITLE_FIELD_NAME)
-    _add_supra_national_status(attributes, status_list,
-                               _INVASIVE_FIGHT_INTRODUCTION_STATUS_TYPE_URI,
-                               _INVASIVE_FIGHT_INTRODUCTION_STATUS_CODE_FIELD_NAME,
-                               _INVASIVE_FIGHT_INTRODUCTION_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(
+        attributes, status_list, _BARCELONA_CONVENTION_STATUS_TYPE_URI,
+        _BARCELONA_CONVENTION_STATUS_CODE_FIELD_NAME,
+        _BARCELONA_CONVENTION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _BERN_CONVENTION_STATUS_TYPE_URI,
+        _BERN_CONVENTION_STATUS_CODE_FIELD_NAME,
+        _BERN_CONVENTION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _BONN_CONVENTION_STATUS_TYPE_URI,
+        _BONN_CONVENTION_STATUS_CODE_FIELD_NAME,
+        _BONN_CONVENTION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _OSPAR_CONVENTION_STATUS_TYPE_URI,
+        _OSPAR_CONVENTION_STATUS_CODE_FIELD_NAME,
+        _OSPAR_CONVENTION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _HABITATS_DIRECTIVE_STATUS_TYPE_URI,
+        _HABITATS_DIRECTIVE_STATUS_CODE_FIELD_NAME,
+        _HABITATS_DIRECTIVE_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _BIRDS_DIRECTIVE_STATUS_TYPE_URI,
+        _BIRDS_DIRECTIVE_STATUS_CODE_FIELD_NAME,
+        _BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _NATIONAL_PROTECTION_STATUS_TYPE_URI,
+        _NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME,
+        _NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _WORLD_RED_LIST_STATUS_TYPE_URI,
+        _WORLD_RED_LIST_STATUS_CODE_FIELD_NAME,
+        _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _EUROPEAN_RED_LIST_STATUS_TYPE_URI,
+        _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME,
+        _EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _NATIONAL_RED_LIST_STATUS_TYPE_URI,
+        _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME,
+        _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME,
+        _NATIONAL_RED_LIST_STATUS_TYPE_URI,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _NATIONAL_SCAP_STATUS_TYPE_URI,
+        _NATIONAL_SCAP_STATUS_CODE_FIELD_NAME,
+        _NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _REGULATION_STATUS_TYPE_URI,
+        _REGULATION_STATUS_CODE_FIELD_NAME,
+        _REGULATION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list,
+        _OTHER_REGULATION_STATUS_TYPE_URI,
+        _OTHER_REGULATION_STATUS_CODE_FIELD_NAME,
+        _OTHER_REGULATION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI,
+        _NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME,
+        _NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TYPE_URI,
+        _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_CODE_FIELD_NAME,
+        _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list,
+        _NATIONAL_SENSITIVITY_STATUS_TYPE_URI,
+        _NATIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME,
+        _NATIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME,
+        _NATIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _FORBIDDEN_INTRODUCTION_STATUS_TYPE_URI,
+        _FORBIDDEN_INTRODUCTION_STATUS_CODE_FIELD_NAME,
+        _FORBIDDEN_INTRODUCTION_STATUS_TITLE_FIELD_NAME,
+    )
+    _add_supra_national_status(
+        attributes, status_list, _INVASIVE_FIGHT_INTRODUCTION_STATUS_TYPE_URI,
+        _INVASIVE_FIGHT_INTRODUCTION_STATUS_CODE_FIELD_NAME,
+        _INVASIVE_FIGHT_INTRODUCTION_STATUS_TITLE_FIELD_NAME,
+    )
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
         region_mnhn_id = _location_id(region_dict, 'region')
@@ -225,6 +259,7 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _LOCAL_RED_LIST_STATUS_TYPE_URI, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+            _LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
         attributes[_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = region_dict['name']
@@ -232,6 +267,7 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI, region_mnhn_id,
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
         attributes[_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = region_dict['name']
@@ -246,6 +282,7 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _REGIONAL_SENSITIVITY_STATUS_TYPE_URI, region_mnhn_id,
             _REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
     for old_region_dict in old_region_list:
         reg_code = old_region_dict['insee_code']
@@ -263,6 +300,7 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _LOCAL_RED_LIST_STATUS_TYPE_URI, region_mnhn_id,
             _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+            _LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
         attributes[_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = old_region_dict['name']
@@ -270,6 +308,7 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI, region_mnhn_id,
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
         attributes[_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = old_region_dict['name']
@@ -284,6 +323,7 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _REGIONAL_SENSITIVITY_STATUS_TYPE_URI, region_mnhn_id,
             _REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
     feedback.pushDebugInfo('Added attributes: {}'.format(str(attributes)))
     return attributes
