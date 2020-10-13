@@ -86,6 +86,7 @@ _LOCAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRR'
 _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_code'
 _LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_rem'
 _LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_region'
+_LOCAL_RED_LIST_STATUS_LOCATION_ID_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_id_region'
 _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_libelle'
 _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PNA'
 _NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME = 'plan_national_action_code'
@@ -124,20 +125,25 @@ _WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_mondiale_libelle'
 _REGIONAL_PROTECTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PR'
 _REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME = 'protection_regionale_{reg_code}_code'
 _REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME = 'protection_regionale_{reg_code}_region'
+_REGIONAL_PROTECTION_STATUS_LOCATION_ID_FIELD_NAME = 'protection_regionale_{reg_code}_id_region'
 _REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME = 'protection_regionale_{reg_code}_libelle'
 _REGIONAL_SCAP_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SCAP%20REG'
 _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME = 'scap_regionale_{reg_code}_code'
 _REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME = 'scap_regionale_{reg_code}_region'
+_REGIONAL_SCAP_STATUS_LOCATION_ID_FIELD_NAME = 'scap_regionale_{reg_code}_id_region'
 _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME = 'scap_regionale_{reg_code}_libelle'
 _REGIONAL_SENSITIVITY_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SENSREG'
 _REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME = 'sensibilite_regionale_{reg_code}_code'
 _REGIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME = 'sensibilite_regionale_{reg_code}_rem'
 _REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME = 'sensibilite_regionale_{reg_code}_region'
+_REGIONAL_SENSITIVITY_STATUS_LOCATION_ID_FIELD_NAME = 'sensibilite_regionale_{reg_code}_id_region'
 _REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME = 'sensibilite_regionale_{reg_code}_libelle'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/ZDET'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_code'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME = 'det_znieff_regionale_{reg_code}_rem'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME = 'det_znieff_regionale_{reg_code}_region'
+_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_ID_FIELD_NAME = ('det_znieff_regionale_{reg_code}_'
+                                                           'id_region')
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_libelle'
 _REGULATION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/REGL'
 _REGULATION_STATUS_CODE_FIELD_NAME = 'reglementation_code'
@@ -251,6 +257,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
         region_mnhn_id = _location_id(region_dict, 'region')
+        attributes[_REGIONAL_PROTECTION_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] = \
+            region_dict['insee_code']
         attributes[_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             region_dict['name']
         _add_local_status(
@@ -258,6 +266,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_LOCAL_RED_LIST_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] = \
+            region_dict['insee_code']
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             region_dict['name']
         _add_local_status(
@@ -266,6 +276,9 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)
+        ] = region_dict['insee_code']
         attributes[_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = region_dict['name']
         _add_local_status(
@@ -274,6 +287,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_REGIONAL_SCAP_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] \
+            = region_dict['insee_code']
         attributes[_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = region_dict['name']
         _add_local_status(
@@ -281,6 +296,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_REGIONAL_SENSITIVITY_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] \
+            = region_dict['insee_code']
         attributes[_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = region_dict['name']
         _add_local_status(
@@ -292,6 +309,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     for old_region_dict in old_region_list:
         reg_code = old_region_dict['insee_code']
         region_mnhn_id = _location_id(old_region_dict, 'old_region')
+        attributes[_REGIONAL_PROTECTION_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] = \
+            old_region_dict['insee_code']
         attributes[_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             old_region_dict['name']
         _add_local_status(
@@ -299,6 +318,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_LOCAL_RED_LIST_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] = \
+            old_region_dict['insee_code']
         attributes[_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] = \
             old_region_dict['name']
         _add_local_status(
@@ -307,6 +328,9 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
             _LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[
+            _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)
+        ] = old_region_dict['insee_code']
         attributes[_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = old_region_dict['name']
         _add_local_status(
@@ -315,6 +339,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_REGIONAL_SCAP_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] \
+            = old_region_dict['insee_code']
         attributes[_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = old_region_dict['name']
         _add_local_status(
@@ -322,6 +348,8 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_REGIONAL_SENSITIVITY_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code)] \
+            = old_region_dict['insee_code']
         attributes[_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
             = old_region_dict['name']
         _add_local_status(
@@ -504,6 +532,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for region_dict in region_list:
             reg_code = region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_PROTECTION_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -516,6 +546,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for old_region_dict in old_region_list:
             reg_code = old_region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_PROTECTION_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -539,6 +571,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for region_dict in region_list:
             reg_code = region_dict['insee_code']
             for field_name, field_type in (
+                (_LOCAL_RED_LIST_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -553,6 +587,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for old_region_dict in old_region_list:
             reg_code = old_region_dict['insee_code']
             for field_name, field_type in (
+                (_LOCAL_RED_LIST_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -567,6 +603,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for region_dict in region_list:
             reg_code = region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -581,6 +619,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for old_region_dict in old_region_list:
             reg_code = old_region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -601,6 +641,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for region_dict in region_list:
             reg_code = region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_SCAP_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -613,6 +655,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for old_region_dict in old_region_list:
             reg_code = old_region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_SCAP_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -642,6 +686,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for region_dict in region_list:
             reg_code = region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_SENSITIVITY_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
@@ -656,6 +702,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         for old_region_dict in old_region_list:
             reg_code = old_region_dict['insee_code']
             for field_name, field_type in (
+                (_REGIONAL_SENSITIVITY_STATUS_LOCATION_ID_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
                 (_REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
