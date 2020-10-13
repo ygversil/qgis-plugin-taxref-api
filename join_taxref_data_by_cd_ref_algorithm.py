@@ -441,10 +441,10 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         return self.tr('Join TAXREF status data by CD_REF')
 
     def groupId(self):
-        return 'taxref'
+        return 'fetchandjoindata'
 
     def group(self):
-        return self.tr('TAXREF')
+        return self.tr('Fetch and join data')
 
     def initAlgorithm(self, config):
         with (Path(__file__).parent / 'yml_data' / 'regions.yml').open(encoding='utf-8') as f:
