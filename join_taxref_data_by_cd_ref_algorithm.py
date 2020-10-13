@@ -323,6 +323,17 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         with (Path(__file__).parent / 'yml_data' / 'regions.yml').open(encoding='utf-8') as f:
             region_list = yaml.load(f.read(), Loader=yaml.SafeLoader)
         region_list = [region_list[i] for i in region_indices]
+        if not include_old_regions:
+            old_region_list = []
+        else:
+            with (Path(__file__).parent / 'yml_data'
+                  / 'old_regions.yml').open(encoding='utf-8') as f:
+                old_region_list = yaml.load(f.read(), Loader=yaml.SafeLoader)
+        parent_codes = set(region_dict['insee_code'] for region_dict in region_list)
+        old_region_list = list(
+            filter(lambda old_region_dict: old_region_dict['parent_code'] in parent_codes,
+                   old_region_list)
+        )
         fields = source.fields()
         added_fields = []
         for field_name, field_type in (
@@ -340,12 +351,6 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             (_BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME, QVariant.String),
             (_NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME, QVariant.String),
-            (_WORLD_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
-            (_WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
-            (_EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
-            (_EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
-            (_NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
-            (_NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
         ):
             fields.append(QgsField(field_name, field_type))
             added_fields.append(field_name)
@@ -358,32 +363,9 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                  QVariant.String),
                 (_REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
-                (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.String),
-                (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.String),
-                (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.String),
-                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.String),
-                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.Bool),
-                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
-                 QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
-        if not include_old_regions:
-            old_region_list = []
-        else:
-            with (Path(__file__).parent / 'yml_data'
-                  / 'old_regions.yml').open(encoding='utf-8') as f:
-                old_region_list = yaml.load(f.read(), Loader=yaml.SafeLoader)
-        parent_codes = set(region_dict['insee_code'] for region_dict in region_list)
-        old_region_list = list(
-            filter(lambda old_region_dict: old_region_dict['parent_code'] in parent_codes,
-                   old_region_list)
-        )
         for old_region_dict in old_region_list:
             reg_code = old_region_dict['insee_code']
             for field_name, field_type in (
@@ -393,12 +375,58 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                  QVariant.String),
                 (_REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for field_name, field_type in (
+            (_WORLD_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_WORLD_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
+        ):
+            fields.append(QgsField(field_name, field_type))
+            added_fields.append(field_name)
+        for region_dict in region_list:
+            reg_code = region_dict['insee_code']
+            for field_name, field_type in (
                 (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for old_region_dict in old_region_list:
+            reg_code = old_region_dict['insee_code']
+            for field_name, field_type in (
+                (_LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for region_dict in region_list:
+            reg_code = region_dict['insee_code']
+            for field_name, field_type in (
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.Bool),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for old_region_dict in old_region_list:
+            reg_code = old_region_dict['insee_code']
+            for field_name, field_type in (
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
