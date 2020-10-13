@@ -93,6 +93,9 @@ _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME = ('priorite_action_pub
 _NATIONAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRN'
 _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_nationale_code'
 _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_nationale_libelle'
+_NATIONAL_SCAP_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SCAP%20NAT'
+_NATIONAL_SCAP_STATUS_CODE_FIELD_NAME = 'scap_nationale_code'
+_NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME = 'scap_nationale_libelle'
 _OLD_REGION_ID_MNHN_PREFIX = 'INSEER'
 _OSPAR_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/OSPAR'
 _OSPAR_CONVENTION_STATUS_CODE_FIELD_NAME = 'convention_ospar_code'
@@ -107,6 +110,10 @@ _REGIONAL_PROTECTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/
 _REGIONAL_PROTECTION_STATUS_CODE_FIELD_NAME = 'protection_regionale_{reg_code}_code'
 _REGIONAL_PROTECTION_STATUS_LOCATION_FIELD_NAME = 'protection_regionale_{reg_code}_region'
 _REGIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME = 'protection_regionale_{reg_code}_libelle'
+_REGIONAL_SCAP_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SCAP%20REG'
+_REGIONAL_SCAP_STATUS_CODE_FIELD_NAME = 'scap_regionale_{reg_code}_code'
+_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME = 'scap_regionale_{reg_code}_region'
+_REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME = 'scap_regionale_{reg_code}_libelle'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/ZDET'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_code'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME = 'det_znieff_regionale_{reg_code}_region'
@@ -153,6 +160,9 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     _add_supra_national_status(attributes, status_list, _NATIONAL_RED_LIST_STATUS_TYPE_URI,
                                _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME,
                                _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _NATIONAL_SCAP_STATUS_TYPE_URI,
+                               _NATIONAL_SCAP_STATUS_CODE_FIELD_NAME,
+                               _NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME)
     _add_supra_national_status(attributes, status_list, _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI,
                                _NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME,
                                _NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME)
@@ -184,6 +194,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
+        attributes[_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
+            = region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_SCAP_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
     for old_region_dict in old_region_list:
         reg_code = old_region_dict['insee_code']
         region_mnhn_id = _location_id(old_region_dict, 'old_region')
@@ -207,6 +224,13 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
             attributes, status_list, _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI, region_mnhn_id,
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
             _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+        )
+        attributes[_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code)] \
+            = old_region_dict['name']
+        _add_local_status(
+            attributes, status_list, _REGIONAL_SCAP_STATUS_TYPE_URI, region_mnhn_id,
+            _REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+            _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
         )
     feedback.pushDebugInfo('Added attributes: {}'.format(str(attributes)))
     return attributes
@@ -449,6 +473,36 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.Bool),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for field_name, field_type in (
+            (_NATIONAL_SCAP_STATUS_CODE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME, QVariant.String),
+        ):
+            fields.append(QgsField(field_name, field_type))
+            added_fields.append(field_name)
+        for region_dict in region_list:
+            reg_code = region_dict['insee_code']
+            for field_name, field_type in (
+                (_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+            ):
+                fields.append(QgsField(field_name, field_type))
+                added_fields.append(field_name)
+        for old_region_dict in old_region_list:
+            reg_code = old_region_dict['insee_code']
+            for field_name, field_type in (
+                (_REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_SCAP_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
