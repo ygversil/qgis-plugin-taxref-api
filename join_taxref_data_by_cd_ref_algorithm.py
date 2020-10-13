@@ -454,7 +454,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             QgsProcessingParameterFeatureSource(
                 self.INPUT,
                 self.tr('Input layer'),
-                [QgsProcessing.TypeVectorAnyGeometry]
+                [QgsProcessing.TypeVector]
             )
         )
         self.addParameter(
