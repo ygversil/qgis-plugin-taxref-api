@@ -86,6 +86,10 @@ _NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME = 'plan_national_action_libelle'
 _NATIONAL_PROTECTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PN'
 _NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME = 'protection_nationale_code'
 _NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME = 'protection_nationale_libelle'
+_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PAPNAT'
+_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_CODE_FIELD_NAME = 'priorite_action_publique_nationale_code'
+_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME = ('priorite_action_publique_nationale'
+                                                            '_libelle')
 _NATIONAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRN'
 _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_nationale_code'
 _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_nationale_libelle'
@@ -152,6 +156,10 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     _add_supra_national_status(attributes, status_list, _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI,
                                _NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME,
                                _NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list,
+                               _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TYPE_URI,
+                               _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_CODE_FIELD_NAME,
+                               _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME)
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
         region_mnhn_id = _location_id(region_dict, 'region')
@@ -450,6 +458,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             (_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME, QVariant.Bool),
             (_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_CODE_FIELD_NAME, QVariant.Int),
+            (_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME, QVariant.String),
         ):
             fields.append(QgsField(field_name, field_type))
             added_fields.append(field_name)
