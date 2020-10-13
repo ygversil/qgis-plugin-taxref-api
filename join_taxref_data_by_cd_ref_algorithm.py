@@ -438,7 +438,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         return 'jointaxrefdatabycdref'
 
     def displayName(self):
-        return self.tr('Join TAXREF data by CD_REF')
+        return self.tr('Join TAXREF status data by CD_REF')
 
     def groupId(self):
         return 'taxref'
