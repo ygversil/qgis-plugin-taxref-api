@@ -330,28 +330,36 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
 
 
 def _add_local_status(attributes, status_list, status_type, location_id, code_field_name,
-                      title_field_name):
+                      title_field_name, comments_field_name=None):
     code = []
     title = []
+    comments = []
     for status_dict in status_list:
         if (status_dict['_links']['statusType']['href'] == status_type
                 and status_dict['locationId'] == location_id):
             code.append(status_dict['statusCode'])
             title.append(status_dict['statusName'])
+            comments.append(status_dict['statusRemarks'] or '')
     attributes[code_field_name] = '|'.join(code)
     attributes[title_field_name] = '|'.join(title)
+    if comments_field_name:
+        attributes[comments_field_name] = '|'.join(comments)
 
 
 def _add_supra_national_status(attributes, status_list, status_type, code_field_name,
-                               title_field_name):
+                               title_field_name, comments_field_name=None):
     code = []
     title = []
+    comments = []
     for status_dict in status_list:
         if status_dict['_links']['statusType']['href'] == status_type:
             code.append(status_dict['statusCode'])
             title.append(status_dict['statusName'])
+            comments.append(status_dict['statusRemarks'] or '')
     attributes[code_field_name] = '|'.join(code)
     attributes[title_field_name] = '|'.join(title)
+    if comments_field_name:
+        attributes[comments_field_name] = '|'.join(comments)
 
 
 def _get_json_results(path, feedback):
