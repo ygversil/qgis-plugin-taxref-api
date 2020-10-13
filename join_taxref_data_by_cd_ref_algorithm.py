@@ -438,13 +438,13 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         return 'jointaxrefdatabycdref'
 
     def displayName(self):
-        return self.tr('Join TAXREF data by CD_REF')
+        return self.tr('Join TAXREF status data by CD_REF')
 
     def groupId(self):
-        return 'taxref'
+        return 'fetchandjoindata'
 
     def group(self):
-        return self.tr('TAXREF')
+        return self.tr('Fetch and join data')
 
     def initAlgorithm(self, config):
         with (Path(__file__).parent / 'yml_data' / 'regions.yml').open(encoding='utf-8') as f:
@@ -478,7 +478,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         self.addParameter(
             QgsProcessingParameterBoolean(
                 self.INCLUDE_OLD_REGIONS,
-                self.tr('Include old regions status'),
+                self.tr('Include related old regions status'),
                 region_list,
                 False,
             )
