@@ -478,7 +478,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
         self.addParameter(
             QgsProcessingParameterBoolean(
                 self.INCLUDE_OLD_REGIONS,
-                self.tr('Include old regions status'),
+                self.tr('Include related old regions status'),
                 region_list,
                 False,
             )
