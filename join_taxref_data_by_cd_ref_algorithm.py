@@ -66,6 +66,9 @@ _BIRDS_DIRECTIVE_STATUS_TITLE_FIELD_NAME = 'directive_oiseaux_libelle'
 _BONN_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/BONN'
 _BONN_CONVENTION_STATUS_CODE_FIELD_NAME = 'convention_bonn_code'
 _BONN_CONVENTION_STATUS_TITLE_FIELD_NAME = 'convention_bonn_libelle'
+_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/exPNA'
+_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME = 'plan_national_action_termine_code'
+_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME = 'plan_national_action_termine_libelle'
 _DEPARTMENT_ID_MNHN_PREFIX = 'INSEEND'
 _EUROPEAN_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRE'
 _EUROPEAN_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_europeenne_code'
@@ -77,6 +80,9 @@ _LOCAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRR'
 _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_code'
 _LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_region'
 _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_libelle'
+_NATIONAL_ACTION_PLAN_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PNA'
+_NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME = 'plan_national_action_code'
+_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME = 'plan_national_action_libelle'
 _NATIONAL_PROTECTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PN'
 _NATIONAL_PROTECTION_STATUS_CODE_FIELD_NAME = 'protection_nationale_code'
 _NATIONAL_PROTECTION_STATUS_TITLE_FIELD_NAME = 'protection_nationale_libelle'
@@ -143,6 +149,9 @@ def _added_attributes(cd_ref, region_list, old_region_list, feedback):
     _add_supra_national_status(attributes, status_list, _NATIONAL_RED_LIST_STATUS_TYPE_URI,
                                _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME,
                                _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME)
+    _add_supra_national_status(attributes, status_list, _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI,
+                               _NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME,
+                               _NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME)
     for region_dict in region_list:
         reg_code = region_dict['insee_code']
         region_mnhn_id = _location_id(region_dict, 'region')
@@ -436,6 +445,14 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             ):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
+        for field_name, field_type in (
+            (_NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME, QVariant.Bool),
+            (_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_CODE_FIELD_NAME, QVariant.Bool),
+            (_COMPLETED_NATIONAL_ACTION_PLAN_STATUS_TITLE_FIELD_NAME, QVariant.String),
+        ):
+            fields.append(QgsField(field_name, field_type))
+            added_fields.append(field_name)
         (sink, dest_id) = self.parameterAsSink(parameters, self.OUTPUT,
                                                context, fields, source.wkbType(),
                                                source.sourceCrs())
