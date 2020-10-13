@@ -84,6 +84,7 @@ _INVASIVE_FIGHT_INTRODUCTION_STATUS_CODE_FIELD_NAME = 'lutte_especes_invasive_co
 _INVASIVE_FIGHT_INTRODUCTION_STATUS_TITLE_FIELD_NAME = 'lutte_especes_invasive_libelle'
 _LOCAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRR'
 _LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_code'
+_LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_rem'
 _LOCAL_RED_LIST_STATUS_LOCATION_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_region'
 _LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_regionale_{reg_code}_libelle'
 _NATIONAL_ACTION_PLAN_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/PNA'
@@ -98,12 +99,14 @@ _NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME = ('priorite_action_pub
                                                             '_libelle')
 _NATIONAL_RED_LIST_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/LRN'
 _NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME = 'liste_rouge_nationale_code'
+_NATIONAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME = 'liste_rouge_nationale_rem'
 _NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME = 'liste_rouge_nationale_libelle'
 _NATIONAL_SCAP_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SCAP%20NAT'
 _NATIONAL_SCAP_STATUS_CODE_FIELD_NAME = 'scap_nationale_code'
 _NATIONAL_SCAP_STATUS_TITLE_FIELD_NAME = 'scap_nationale_libelle'
 _NATIONAL_SENSITIVITY_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SENSNAT'
 _NATIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME = 'sensibilite_nationale_code'
+_NATIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME = 'sensibilite_nationale_rem'
 _NATIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME = 'sensibilite_nationale_libelle'
 _OLD_REGION_ID_MNHN_PREFIX = 'INSEER'
 _OSPAR_CONVENTION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/OSPAR'
@@ -128,10 +131,12 @@ _REGIONAL_SCAP_STATUS_LOCATION_FIELD_NAME = 'scap_regionale_{reg_code}_region'
 _REGIONAL_SCAP_STATUS_TITLE_FIELD_NAME = 'scap_regionale_{reg_code}_libelle'
 _REGIONAL_SENSITIVITY_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/SENSREG'
 _REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME = 'sensibilite_regionale_{reg_code}_code'
+_REGIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME = 'sensibilite_regionale_{reg_code}_rem'
 _REGIONAL_SENSITIVITY_STATUS_LOCATION_FIELD_NAME = 'sensibilite_regionale_{reg_code}_region'
 _REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME = 'sensibilite_regionale_{reg_code}_libelle'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/ZDET'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_code'
+_REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME = 'det_znieff_regionale_{reg_code}_rem'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_LOCATION_FIELD_NAME = 'det_znieff_regionale_{reg_code}_region'
 _REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME = 'det_znieff_regionale_{reg_code}_libelle'
 _REGULATION_STATUS_TYPE_URI = 'https://taxref.mnhn.fr/api/status/types/REGL'
@@ -527,6 +532,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             (_EUROPEAN_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_NATIONAL_RED_LIST_STATUS_CODE_FIELD_NAME, QVariant.String),
             (_NATIONAL_RED_LIST_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME, QVariant.String),
         ):
             fields.append(QgsField(field_name, field_type))
             added_fields.append(field_name)
@@ -539,6 +545,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
@@ -550,6 +558,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 (_LOCAL_RED_LIST_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
                 (_LOCAL_RED_LIST_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_LOCAL_RED_LIST_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
@@ -563,6 +573,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                  QVariant.Bool),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
@@ -574,6 +586,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.Bool),
                 (_REGIONAL_ZNIEFF_CRITICAL_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_ZNIEFF_CRITICAL_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
@@ -621,6 +635,7 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
             (_NATIONAL_PUBLIC_ACTION_PRIORITY_STATUS_TITLE_FIELD_NAME, QVariant.String),
             (_NATIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME, QVariant.Bool),
             (_NATIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME, QVariant.String),
+            (_NATIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME, QVariant.String),
         ):
             fields.append(QgsField(field_name, field_type))
             added_fields.append(field_name)
@@ -633,6 +648,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                  QVariant.Bool),
                 (_REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
+                (_REGIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
                 added_fields.append(field_name)
@@ -644,6 +661,8 @@ class JoinTaxrefDataByCdRefAlgorithm(QgisAlgorithm):
                 (_REGIONAL_SENSITIVITY_STATUS_CODE_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.Bool),
                 (_REGIONAL_SENSITIVITY_STATUS_TITLE_FIELD_NAME.format(reg_code=reg_code),
+                 QVariant.String),
+                (_REGIONAL_SENSITIVITY_STATUS_COMMENTS_FIELD_NAME.format(reg_code=reg_code),
                  QVariant.String),
             ):
                 fields.append(QgsField(field_name, field_type))
