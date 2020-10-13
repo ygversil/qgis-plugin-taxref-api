@@ -20,7 +20,9 @@ repository=https://github.com/ygversil/qgis-plugin-taxref-api
 
 hasProcessingProvider=yes
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog=
+  Version 0.2.0
+  * Add first algorithm that join status data from TAXREF API in separated columns
 
 # Tags are comma separated with spaces allowed
 tags=ecology, join, layers, processing, table, webservice, taxref, taxon, mnhn
