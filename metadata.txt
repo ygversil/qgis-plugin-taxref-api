@@ -6,7 +6,7 @@
 name=TAXREF API
 qgisMinimumVersion=3.0
 description=This plugin install a processing algorithm to download and join data from French TAXREF API, provided by the French National Museum of Natural History
-version=0.1.0
+version=0.2.0-dev1
 author=Yann Voté
 email=ygversil@lilo.org
 
