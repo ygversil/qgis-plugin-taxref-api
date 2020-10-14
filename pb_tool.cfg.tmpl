@@ -44,6 +44,8 @@ name: taxref_api
 # Full path to where you want your plugin directory copied. If empty,
 # the QGIS default path will be used. Don't include the plugin name in
 # the path.
+# Example:
+#plugin_path: /home/<username>/.local/share/QGIS/QGIS3/profiles/dev/python/plugins
 plugin_path:
 
 [files]
@@ -51,7 +53,7 @@ plugin_path:
 python_files: __init__.py
              taxref_api.py
              taxref_api_provider.py
-             taxref_api_algorithm.py
+             join_taxref_data_by_cd_ref_algorithm.py
 
 # The main dialog file that is loaded (not compiled)
 main_dialog:
@@ -67,7 +69,7 @@ extras: metadata.txt
 
 # Other directories to be deployed with the plugin.
 # These must be subdirectories under the plugin directory
-extra_dirs:
+extra_dirs: yml_data
 
 # ISO code(s) for any locales (translations), separated by spaces.
 # Corresponding .ts files must exist in the i18n directory

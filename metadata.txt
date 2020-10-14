@@ -6,7 +6,7 @@
 name=TAXREF API
 qgisMinimumVersion=3.0
 description=This plugin install a processing algorithm to download and join data from French TAXREF API, provided by the French National Museum of Natural History
-version=0.1.0
+version=0.2.0-dev1
 author=Yann Voté
 email=ygversil@lilo.org
 
@@ -20,7 +20,9 @@ repository=https://github.com/ygversil/qgis-plugin-taxref-api
 
 hasProcessingProvider=yes
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog=
+  Version 0.2.0
+  * Add first algorithm that join status data from TAXREF API in separated columns
 
 # Tags are comma separated with spaces allowed
 tags=ecology, join, layers, processing, table, webservice, taxref, taxon, mnhn

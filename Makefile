@@ -41,7 +41,7 @@ SOURCES = \
 	__init__.py \
 	taxref_api.py \
 	taxref_api_provider.py \
-	taxref_api_algorithm.py \
+	join_taxref_data_by_cd_ref_algorithm.py \
 
 PLUGINNAME = taxref_api
 
@@ -53,7 +53,7 @@ UI_FILES =
 
 EXTRAS = metadata.txt
 
-EXTRA_DIRS =
+EXTRA_DIRS = yml_data
 
 COMPILED_RESOURCE_FILES =
 
